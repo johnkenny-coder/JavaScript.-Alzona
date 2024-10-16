@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: rgb(112, 50, 50);
+            text-align: center;
+        }
+
+        input {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px;
+        }
+    </style>
+    <title>ACTIVITY</title>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Enter your task">
+    <button onclick="addTask()"><b>Add Task</b></button>
+    <ul id="taskList"></ul>
+
+    <script>
+        function Task(name) {
+            this.name = name;
+            this.dateAdded = new Date().toLocaleString();
+        }
+
+        const taskManager = {
+            tasks: [],
+            addTask(taskName) {
+                const newTask = new Task(taskName);
+                this.tasks.push(newTask);
+                this.displayTasks();
+            },
+            editTask(index) {
+                const oldName = this.tasks[index].name;
+                const newName = prompt("Enter your new task:", oldName); 
+                
+
+                if (newName && newName.trim()) {
+                    this.tasks[index].name = newName; 
+                    this.displayTasks();
+                } else {
+                    alert("Please enter a valid task name!");
+                }
+            },
+            deleteTask(index) {
+                this.tasks.splice(index, 1);
+                this.displayTasks();
+            },
+            displayTasks() {
+                const taskList = document.getElementById('taskList');
+                taskList.innerHTML = '';
+                this.tasks.forEach((task, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <input type="checkbox"> ${task.name} - Added on: ${task.dateAdded}
+                        <button onclick="deleteTask(${index})"><b>Delete</b></button>
+                        <button onclick="editTask(${index})"><b>Edit</b></button>
+                    `;
+                    taskList.appendChild(listItem);
+                });
+            }
+        };
+
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskName = taskInput.value;
+            if (taskName.trim()) {
+                taskManager.addTask(taskName);
+                taskInput.value = '';
+            } else {
+                alert("Please Enter a Valid Task!");
+            }
+        }
+
+        function deleteTask(index) {
+            taskManager.deleteTask(index);
+        }
+
+        function editTask(index) {
+            taskManager.editTask(index);
+        }
+    </script>
+</body>
+</html>
